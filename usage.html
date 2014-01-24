@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"><head>
+
+<script type="text/javascript" src="./observer.js"></script>
+
+<script type="text/javascript">
+
+document.addEventListener( "DOMContentLoaded", function() {
+
+var initialMessage = [ "The idea behind the observer", "is to notify subscribed objects", "that the observable value is being modified" ],
+  observable = new Observable({ text1: "", text2: "", text3: "" });
+
+initialMessage.forEach(function( text, i ) {
+  document.getElementById( "observable-textfield" + (i+1) ).value = text;
+});
+
+observable.addObserver( document.getElementById( "observing-element" ), function( newValue ) {
+  this.firstChild.nodeValue = newValue.text1 + ", " + newValue.text2 + ", " + newValue.text3 + ".";
+});
+
+document.getElementById( "observable-textfield1" ).addEventListener( "keyup", function( e ) {
+  observable.text1 = e.target.value;
+});
+
+document.getElementById( "observable-textfield2" ).addEventListener( "keyup", function( e ) {
+  observable.text2 = e.target.value;
+});
+
+document.getElementById( "observable-textfield3" ).addEventListener( "keyup", function( e ) {
+  observable.text3 = e.target.value;
+});
+
+observable.text1 = initialMessage[0];
+observable.text2 = initialMessage[1];
+observable.text3 = initialMessage[2];
+
+});
+
+</script>
+
+</head><body>
+
+<div id="wrapper">
+  <h1 id="observing-element"> </h1>
+  <div id="textfields">
+    <label for="observable-textfield1">Change text here -></label>
+    <input id="observable-textfield1" type="text" />
+    <input id="observable-textfield2" type="text" />
+    <input id="observable-textfield3" type="text" />
+  </div>
+</div>
+
+<style type="text/css">
+
+body
+{
+  margin: 0;
+}
+#wrapper
+{
+  background: radial-gradient(circle farthest-corner at center center, #008000, #006000);
+  position: fixed;
+  height: 100%;
+  width: 100%;
+}
+#observing-element
+{
+  bottom: 40%;
+  left: 50%;
+  margin-left: -400px;
+  padding: 12px 0;
+  position: absolute;
+  width: 800px;
+}
+#textfields
+{
+  bottom: 35%;
+  left: 50%;
+  margin-left: -506px;
+  padding: 8px 0;
+  position: absolute;
+  width: 1012px;
+}
+#observing-element,
+#textfields
+{
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.5);
+  color: #FFFFFF;
+  text-align: center;
+}
+#textfields input
+{
+  border: none;
+  padding: 4px;
+  width: 268px;
+}
+
+
+</style>
+
+</body></html>
