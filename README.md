@@ -5,18 +5,25 @@ Native javascript observer
 Usage
 -----
 ```javascript
-var observable = new Observable({ property1: "", property2: "" });
+// initialize observable model
+var oModel = new Observable({ property1: "", property2: "" });
 
-observable.property1.addObserver( document.getElementById( "observing-element1" ), function( newValue ) {
+// add observers for properties
+oModel.property1.addObserver( document.getElementById( "observing-element1" ), function( newValue ) {
   this.firstChild.nodeValue = newValue;
 });
 
-observable.property2.addObserver( document.getElementById( "observing-element2" ), function( newValue ) {
+oModel.property2.addObserver( document.getElementById( "observing-element2" ), function( newValue ) {
   this.firstChild.nodeValue = newValue;
 });
+
+// that's all
 
 ...
 
-observable.property1 = "New content for the first observerving element";
-observable.property2 = "New content for the second observerving element";
+// now you can just change properties values
+oModel.property1 = "New content for the first observerving element";
+oModel.property2 = "New content for the second observerving element";
+
+// document observing elements would be updated in the background
 ```
