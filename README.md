@@ -7,12 +7,12 @@ Usage
 ```javascript
 var observable = new Observable({ property1: "", property2: "" });
 
-observable.addObserver( document.getElementById( "observing-element1" ), function( newValue ) {
-  this.firstChild.nodeValue = newValue.property1;
+observable.property1.addObserver( document.getElementById( "observing-element1" ), function( newValue ) {
+  this.firstChild.nodeValue = newValue;
 });
 
-observable.addObserver( document.getElementById( "observing-element2" ), function( newValue ) {
-  this.firstChild.nodeValue = newValue.property2;
+observable.property2.addObserver( document.getElementById( "observing-element2" ), function( newValue ) {
+  this.firstChild.nodeValue = newValue;
 });
 
 ...

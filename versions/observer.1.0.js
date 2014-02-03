@@ -1,5 +1,5 @@
 /**
-* Observer.js v1.1
+* Observer.js v1.1.0
 * Native javascript observer
 * https://github.com/yevhentiurin/observerjs
 *
@@ -7,7 +7,7 @@
 * Licensed under the LGPL Version 3 license
 * http://www.gnu.org/licenses/lgpl.txt
 *
-* Date: February 03, 2014
+* Date: January 24, 2014
 **/
 
 (function() {

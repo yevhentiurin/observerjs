@@ -14,9 +14,13 @@ initialMessage.forEach(function( text, i ) {
   document.getElementById( "observable-textfield" + (i+1) ).value = text;
 });
 
-observable.addObserver( document.getElementById( "observing-element" ), function( newValue ) {
-  this.firstChild.nodeValue = newValue.text1 + ", " + newValue.text2 + ", " + newValue.text3 + ".";
-});
+function ObservingHandler( newValue ) {
+  this.firstChild.nodeValue = observable.text1 + ", " + observable.text2 + ", " + observable.text3 + ".";
+};
+
+observable.text1.addObserver( document.getElementById( "observing-element" ), ObservingHandler );
+observable.text2.addObserver( document.getElementById( "observing-element" ), ObservingHandler );
+observable.text3.addObserver( document.getElementById( "observing-element" ), ObservingHandler );
 
 document.getElementById( "observable-textfield1" ).addEventListener( "keyup", function( e ) {
   observable.text1 = e.target.value;
