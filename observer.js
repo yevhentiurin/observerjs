@@ -1,21 +1,20 @@
 /**
-* Observer.js v1.1
+* Observer.js
 * Native javascript observer
-* https://github.com/yevhentiurin/observerjs
+* https://github.com/ytiurin/observerjs
 *
 * Yevhen Tiurin <yevhentiurin@gmail.com>
-* Licensed under the LGPL Version 3 license
-* http://www.gnu.org/licenses/lgpl.txt
+* The MIT License (MIT)
+* http://opensource.org/licenses/MIT
 *
-* Date: February 03, 2014
+* May 11, 2014
 **/
 
 (function() {
 
 function Observable(inObj)
 {
-  var obj = new Object,
-    ole = this;
+  var obj = new Object, ole = this, definePropertyNames;
 
   ole.getProperty = function(propertyName)
   {
@@ -28,62 +27,73 @@ function Observable(inObj)
       obj[propertyName] = new ObservableValue;
 
     obj[propertyName].set(inValue);
+
+    return ole;
   }
 
   function defineObservableProperty(propertyName) 
   {
-    Object.defineProperty(ole, propertyName, 
-    {
-      get: function()
-      { 
-        return ole.getProperty(propertyName);
-      },
-      set : function(inValue)
-      { 
-        ole.setProperty(propertyName, inValue);
-      },
-      enumerable : true,
-      configurable : true
-    });
+    function getter()
+    { 
+      return this.getProperty(propertyName);
+    }
+
+    function setter(inValue)
+    { 
+      this.setProperty(propertyName, inValue);
+    }
+
+    if (Object.defineProperty !== undefined)
+      Object.defineProperty(ole, propertyName, { enumerable : true, 
+        configurable : true, get: getter, set : setter });
   };
 
-  if (Object.prototype.toString.call(inObj) === "[object Object]")
-    for (var i in inObj)
-    {
-      obj[i] = new ObservableValue(inObj[i]);
-
-      if (Object.defineProperty !== undefined)
-        defineObservableProperty(i);
-    };
+  if (Object.prototype.toString.call(inObj) === "[object Object]") {
+    definePropertyNames = Object.getOwnPropertyNames(inObj);
+    definePropertyNames.forEach(function(propertyName) {
+      obj[propertyName] = new ObservableValue(inObj[propertyName]);
+      defineObservableProperty(propertyName);
+    });
+  }
 }
 
 function ObservableValue(inValue)
 {
   var value = inValue;
   
-  function Instance()
+  function get()
   {
-    this.get = function()
-    {
-      return value;
-    }
-
-    this.set = function(setValue)
-    {
-      value = setValue;
-
-      this.notifyObservers(value);
-    }
-
-    this.toString = function()
-    {
-      return value.toString();
-    }
+    return value;
   }
 
-  Instance.prototype = new ObserverCollection;
+  function set(setValue)
+  {
+    value = setValue;
 
-  return new Instance;
+    this.notify();
+  }
+
+  function toString()
+  {
+    return value.toString();
+  }
+
+  function notify()
+  {
+    this.notifyObservers(value);
+  }
+
+  function ObservableValueInstance()
+  {
+    this.get = get;
+    this.set = set;
+    this.toString = toString;
+    this.notify = notify;
+  }
+
+  ObservableValueInstance.prototype = new ObserverCollection;
+
+  return new ObservableValueInstance;
 }
 
 function ObserverCollection()
@@ -92,21 +102,29 @@ function ObserverCollection()
 
   function addObserver(object, notifyHandler)
   {
-    aObservers.push(
-    {
-      object: object,
-      notifyHandler: notifyHandler
-    });
+    var objR = object.length ? object : [object];
+
+    for (var i = objR.length-1; i >= 0; i--)
+      aObservers.push({
+        object: objR[i],
+        notifyHandler: notifyHandler
+      });
+
+    if (this.notify)
+      this.notify();
+
+    return this;
   }
 
   function removeObserver(object)
   {
-    var indexOfRemoving = aObservers.reduce(function(prevIndex, observer, index)
-    {
-      return (observer.object === object) ? index : prevIndex;
-    }, -1);
-
-    aObservers.splice(indexOfRemoving, (indexOfRemoving > -1 ? 1 : 0));
+    for (var aoI = aObservers.length-1; aoI >= 0; aoI--) 
+      if (aObservers[aoI].object === object) {
+        aObservers.splice(aoI, 1);
+        aoI--;
+      }
+    
+    return this;
   }
 
   function notifyObservers(notifyValue)
@@ -115,6 +133,8 @@ function ObserverCollection()
     {
       observer.notifyHandler.apply(observer.object, [notifyValue]);
     });
+    
+    return this;
   }
 
   return {
