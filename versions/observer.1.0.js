@@ -1,13 +1,13 @@
 /**
-* Observer.js v1.1.0
+* Observer.js 1.0
 * Native javascript observer
-* https://github.com/yevhentiurin/observerjs
+* https://github.com/ytiurin/observerjs
 *
 * Yevhen Tiurin <yevhentiurin@gmail.com>
-* Licensed under the LGPL Version 3 license
-* http://www.gnu.org/licenses/lgpl.txt
+* The MIT License (MIT)
+* http://opensource.org/licenses/MIT
 *
-* Date: January 24, 2014
+* January 24, 2014
 **/
 
 (function() {
